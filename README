@@ -1,0 +1,20 @@
+KitpagesFileSystemBundle
+=====================================
+
+This is a bundle that provides a filesystem abstraction layer.
+This bundle was based on the code of KnpGaufretteBundle
+
+Installation
+============
+hum... as usual...
+
+put the code in vendors/Kitpages/FileBundle
+
+add vendors/ in the app/autoload.php
+
+add the new Bundle in app/appKernel.php
+
+
+
+
+
