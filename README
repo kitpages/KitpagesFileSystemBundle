@@ -8,8 +8,6 @@ Installation
 ============
 hum... as usual...
 
-put the code in vendors/Kitpages/FileBundle
-
 add vendors/ in the app/autoload.php
 
 add the new Bundle in app/appKernel.php

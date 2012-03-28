@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="kitpages_file_system.adapter.factory.local" class="Kitpages\FileSystemBundle\DependencyInjection\Factory\LocalAdapterFactory">
+            <tag name="kitpages_file_system.adapter.factory" />
+        </service>
+        <service id="kitpages_file_system.adapter.factory.ftp" class="Kitpages\FileSystemBundle\DependencyInjection\Factory\FtpAdapterFactory">
+            <tag name="kitpages_file_system.adapter.factory" />
+        </service>
+        <service id="kitpages_file_system.adapter.factory.amazon_s3" class="Kitpages\FileSystemBundle\DependencyInjection\Factory\AmazonS3AdapterFactory">
+            <tag name="kitpages_file_system.adapter.factory" />
+        </service>
+    </services>
+
+</container>

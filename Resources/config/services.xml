@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="kitpages_file_system.adapter.local" class="Kitpages\FileSystemBundle\Service\Adapter\Local" abstract="true">
+            <argument /><!-- Directory -->
+            <argument /><!-- Create -->
+        </service>
+        <service id="kitpages_file_system.adapter.ftp" class="Kitpages\FileSystemBundle\Service\Adapter\Ftp" abstract="true">
+            <argument /><!-- Directory -->
+            <argument /><!-- Create -->
+        </service>
+        <service id="kitpages_file_system.adapter.amazon_s3" class="Kitpages\FileSystemBundle\Service\Adapter\AmazonS3" abstract="true">
+            <argument /><!-- Directory -->
+            <argument /><!-- Create -->
+        </service>
+        <service id="kitpages_file_system.file_system_map" class="Kitpages\FileSystemBundle\Service\FilesystemMap">
+            <argument /> <!-- map of filesystems -->
+        </service>
+    </services>
+
+</container>
