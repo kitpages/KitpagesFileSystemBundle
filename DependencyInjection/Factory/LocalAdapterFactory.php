@@ -3,6 +3,7 @@
 namespace Kitpages\FileSystemBundle\DependencyInjection\Factory;
 
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 
@@ -19,7 +20,10 @@ class LocalAdapterFactory implements AdapterFactoryInterface
     {
         $container
             ->setDefinition($id, new DefinitionDecorator('kitpages_file_system.adapter.local'))
-            ->replaceArgument(0, $config['directory'])
+            ->addArgument(new Reference('kitpages.util'))
+            ->addArgument($config['directory_public'])
+            ->addArgument($config['directory_private'])
+            ->addArgument($config['base_url'])
         ;
     }
 
@@ -38,7 +42,9 @@ class LocalAdapterFactory implements AdapterFactoryInterface
     {
         $node
             ->children()
-                ->scalarNode('directory')->isRequired()->end()
+                ->scalarNode('directory_public')->isRequired()->end()
+                ->scalarNode('directory_private')->isRequired()->end()
+                ->scalarNode('base_url')->isRequired()->end()
             ->end()
         ;
     }

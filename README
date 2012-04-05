@@ -12,7 +12,8 @@ add vendors/ in the app/autoload.php
 
 add the new Bundle in app/appKernel.php
 
-
+// AWS SDK needs a special autoloader
+require_once __DIR__.'/../vendor/aws-sdk/sdk.class.php';
 
 
 

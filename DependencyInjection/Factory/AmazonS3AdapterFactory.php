@@ -18,11 +18,12 @@ class AmazonS3AdapterFactory implements AdapterFactoryInterface
     */
     public function create(ContainerBuilder $container, $id, array $config)
     {
+
         $container
             ->setDefinition($id, new DefinitionDecorator('kitpages_file_system.adapter.amazon_s3'))
-//            ->addArgument(new Reference($config['amazon_s3_id']))
             ->addArgument($config['bucket_name'])
-            ->addArgument($config['create'])
+            ->addArgument($config['key'])
+            ->addArgument($config['secret_key'])
         ;
     }
 
@@ -45,9 +46,9 @@ class AmazonS3AdapterFactory implements AdapterFactoryInterface
     {
         $builder
             ->children()
-//                ->scalarNode('amazon_s3_id')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('key')->isRequired()->cannotBeEmpty()->end()
+                ->scalarNode('secret_key')->isRequired()->cannotBeEmpty()->end()
                 ->scalarNode('bucket_name')->isRequired()->cannotBeEmpty()->end()
-                ->booleanNode('create')->defaultFalse()->end()
             ->end()
         ;
     }
