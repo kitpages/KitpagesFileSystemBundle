@@ -25,12 +25,16 @@ You need to add the following lines in your deps :
         git=git://github.com/kitpages/KitpagesFileSystemBundle.git
         target=Kitpages/FileSystemBundle
 
+Only if you use AmazonS3
     [aws-sdk]
-        git=https://github.com/amazonwebservices/aws-sdk-for-php
+        git=http://github.com/amazonwebservices/aws-sdk-for-php
         target=aws-sdk
 
 AppKernel.php
+        $bundles = array(
+        ...
             new Kitpages\FileSystemBundle\KitpagesFileSystemBundle(),
+        );
 
 // AWS SDK needs a special autoloader
 require_once __DIR__.'/../vendor/aws-sdk/sdk.class.php';
@@ -38,8 +42,19 @@ require_once __DIR__.'/../vendor/aws-sdk/sdk.class.php';
 
 Configuration example
 =====================
-786ac0de378cb83a5c7ab0ea0ceca7e56b4676c2
 
+kitpages_file_system:
+    file_system_list:
+        kitpagesFile:
+            local:
+                directory_public: %kernel.root_dir%/../web
+                directory_private: %kernel.root_dir%
+                base_url: %base_url%
+        kitpagesAmazon:
+            amazon_s3:
+                bucket_name: %kitpagesFile_amazons3_bucketname%
+                key: %kitpagesFile_amazons3_key%
+                secret_key: %kitpagesFile_amazons3_secretkey%
 
 Usage example
 =============
