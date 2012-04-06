@@ -38,4 +38,9 @@ class FilesystemMap
 
         return $this->map[$name];
     }
+
+    public function getAdapterList()
+    {
+        return $this->map;
+    }
 }

@@ -8,11 +8,13 @@ class AdapterFile implements AdapterFileInterface {
 
     protected $path = null;
     protected $isPrivate = true;
+    protected $mimeType = true;
 
-    public function __construct($path, $isPrivate = true)
+    public function __construct($path, $isPrivate = true, $mimeType = null)
     {
         $this->path = $path;
         $this->isPrivate = $isPrivate;
+        $this->mimeType = $mimeType;
     }
 
     public function getPath()
@@ -23,6 +25,11 @@ class AdapterFile implements AdapterFileInterface {
     public function getIsPrivate()
     {
         return $this->isPrivate;
+    }
+
+    public function getMimeType()
+    {
+        return $this->mimeType;
     }
 
 }

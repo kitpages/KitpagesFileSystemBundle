@@ -16,12 +16,14 @@ class AmazonS3 implements AdapterInterface{
     protected $secretKey = null;
     protected $bucketName = null;
     protected $s3 = null;
+    protected $idService = null;
     protected $protocol = null;
 
     public function __construct(
         $bucketName,
         $key,
-        $secretKey
+        $secretKey,
+        $idService
     )
     {
         $protocolList = stream_get_wrappers();
@@ -38,16 +40,10 @@ class AmazonS3 implements AdapterInterface{
         }
 
         $this->bucketName = $bucketName;
+        $this->idService = str_replace('kitpages_file_system.file_system.', '', $idService);
         $this->s3 = new \AmazonS3(array('key' => $key, 'secret' => $secretKey));
         $this->s3->register_stream_wrapper($this->protocol);
 
-        // test
-//        $pathFileLocal = dirname(__FILE__).'/../../Tests/tmp/testAmazon.txt';
-//        $fileAmazon = new \Kitpages\FileSystemBundle\ValueObject\AdapterFile('test/testAmazon.txt', false);
-//        $fNew = fopen($pathFileLocal, 'w');
-//        fputs ($fNew, 'fichier de test');
-//        fclose($fNew);
-//        $this->moveTempToAdapter($pathFileLocal, $fileAmazon);
     }
 
     public function getBucket()
@@ -55,9 +51,18 @@ class AmazonS3 implements AdapterInterface{
         return $this->protocol.'://'.$this->bucketName;
     }
 
+    public function getPathFull(AdapterFileInterface $file)
+    {
+        return $this->getBucket().'/'.$this->getPath($file);
+    }
+
     public function getPath(AdapterFileInterface $file)
     {
-        return $this->getBucket().'/'.$file->getPath();
+        if ($file->getIsPrivate()) {
+            return 'bundle/kitpagesFileSystem/'.$this->idService.'/private/'.$file->getPath();
+        } else {
+            return 'bundle/kitpagesFileSystem/'.$this->idService.'/public/'.$file->getPath();
+        }
     }
 
     public function getProtocol()
@@ -82,8 +87,8 @@ class AmazonS3 implements AdapterInterface{
         );
 
         $result = $this->s3->copy_object(
-			array('bucket' => $this->bucketName, 'filename' => $file->getPath()),
-			array('bucket' => $this->bucketName, 'filename' => $file->getPath()),
+			array('bucket' => $this->bucketName, 'filename' => $this->getPath($file)),
+			array('bucket' => $this->bucketName, 'filename' => $this->getPath($file)),
 			$opt
 		);
         return $result->isOK();
@@ -92,21 +97,25 @@ class AmazonS3 implements AdapterInterface{
 
     function moveTempToAdapter($tempPath, AdapterFileInterface $file)
     {
-        $targetFileCopyPath = $this->getPath($file);
+        $targetFileCopyPath = $this->getPathFull($file);
         $resTargetFile = fopen($tempPath, 'r');
         $resTargetFileCopy = fopen($targetFileCopyPath, 'w');
         $resultCopy = stream_copy_to_stream($resTargetFile, $resTargetFileCopy);
         fclose($resTargetFile);
         fclose($resTargetFileCopy);
 
-        $this->fileSetAclAndContentType($file, $this->getMimeContentType($tempPath));
+        if ($file->getMimeType() == null) {
+            $this->getMimeContentType($tempPath);
+        }
+
+        $this->fileSetAclAndContentType($file, $file->getMimeType());
 
         return $resultCopy;
     }
 
     function moveAdapterToTemp(AdapterFileInterface $file, $tempPath)
     {
-        $targetFilePath = $this->getPath($file);
+        $targetFilePath = $this->getPathFull($file);
         $resTargetFileCopy = fopen($tempPath, 'w');
         $resTargetFile = fopen($targetFilePath, 'r');
         $resultCopy = stream_copy_to_stream($resTargetFile, $resTargetFileCopy);
@@ -116,14 +125,14 @@ class AmazonS3 implements AdapterInterface{
 
     public function rename(AdapterFileInterface $tempFile, AdapterFileInterface $targetFile)
     {
-        $tempFilePath = $this->getPath($tempFile);
-        $targetFilePath = $this->getPath($targetFile);
+        $tempFilePath = $this->getPathFull($tempFile);
+        $targetFilePath = $this->getPathFull($targetFile);
         return rename($tempFilePath, $targetFilePath);
     }
 
     public function unlink(AdapterFileInterface $targetFile)
     {
-        $targetFilePath = $this->getPath($targetFile);
+        $targetFilePath = $this->getPathFull($targetFile);
         if ($this->isFile($targetFile)){
             return unlink($targetFilePath);
         }
@@ -134,11 +143,11 @@ class AmazonS3 implements AdapterInterface{
     {
         $source = array(
             'bucket' =>$this->bucketName,
-            'filename' => $targetFile->getPath()
+            'filename' => $this->getPath($targetFile)
         );
         $dest = array(
             'bucket' =>$this->bucketName,
-            'filename' => $targetFileCopy->getPath()
+            'filename' => $this->getPath($targetFileCopy)
         );
         $opt = array();
         if (!$targetFileCopy->getIsPrivate()) {
@@ -150,13 +159,13 @@ class AmazonS3 implements AdapterInterface{
 
     public function rmdirr(AdapterFileInterface $directory)
     {
-        return $this->s3->delete_object($this->bucketName, $directory->getPath());
+        return $this->s3->delete_object($this->bucketName, $this->getPath($directory));
     }
 
     // information
     public function isFile(AdapterFileInterface $targetFile)
     {
-        $exist = $this->s3->if_object_exists($this->bucketName, $targetFile->getPath());
+        $exist = $this->s3->if_object_exists($this->bucketName, $this->getPath($targetFile));
         if ($exist) {
             return true;
         } else {
@@ -166,7 +175,6 @@ class AmazonS3 implements AdapterInterface{
 
     public function sendFileToBrowser(AdapterFileInterface $targetFile, $name = null)
     {
-
         //First, see if the file exists
         if (!$this->isFile($targetFile)) {
             throw new \Exception(
@@ -180,7 +188,7 @@ class AmazonS3 implements AdapterInterface{
         }
 
 
-        $headers = $this->s3->get_object_headers($this->bucketName, $targetFile->getPath());
+        $headers = $this->s3->get_object_headers($this->bucketName, $this->getPath($targetFile));
         $header = $headers->header;
 
         $ctype = $header['content-type'];
@@ -197,7 +205,7 @@ class AmazonS3 implements AdapterInterface{
         $chunksize = 1*(1024*1024); // how many bytes per chunk
         $buffer = '';
         $cnt =0;
-        $handle = fopen($this->getPath($targetFile), 'rb');
+        $handle = fopen($this->getPathFull($targetFile), 'rb');
         if ($handle === false) {
             return false;
         }
@@ -217,13 +225,13 @@ class AmazonS3 implements AdapterInterface{
 
     public function getFileContent(AdapterFileInterface $targetFile)
     {
-        $targetFilePath = $this->getPath($targetFile);
+        $targetFilePath = $this->getPathFull($targetFile);
         return file_get_contents($targetFilePath);
     }
 
     public function getFileLocation(AdapterFileInterface $targetFile)
     {
-        return $this->s3->get_object_url($this->bucketName, $targetFile->getPath());
+        return $this->s3->get_object_url($this->bucketName, $this->getPath($targetFile));
     }
 
     public function getMimeContentType($fileName)

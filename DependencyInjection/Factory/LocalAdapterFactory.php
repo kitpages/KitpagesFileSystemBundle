@@ -24,6 +24,7 @@ class LocalAdapterFactory implements AdapterFactoryInterface
             ->addArgument($config['directory_public'])
             ->addArgument($config['directory_private'])
             ->addArgument($config['base_url'])
+            ->addArgument($id)
         ;
     }
 

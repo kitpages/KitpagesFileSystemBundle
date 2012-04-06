@@ -21,21 +21,16 @@ class Local implements AdapterInterface {
         Util $util,
         $directoryPublic,
         $directoryPrivate,
-        $baseUrl
+        $baseUrl,
+        $idService
     )
     {
         $this->util = $util;
-        $this->directoryPublic = $directoryPublic;
-        $this->directoryPrivate = $directoryPrivate;
-        $this->baseUrl = $baseUrl;
 
-        // test
-        $pathFileLocal = dirname(__FILE__).'/../../Tests/tmp/testAmazon.txt';
-        $fileAmazon = new \Kitpages\FileSystemBundle\ValueObject\AdapterFile('data/bundle/kitpagesfile/testAmazon.txt', true);
-        $fNew = fopen($pathFileLocal, 'w');
-        fputs ($fNew, 'fichier de test');
-        fclose($fNew);
-        $this->moveTempToAdapter($pathFileLocal, $fileAmazon);
+        $idService = str_replace('kitpages_file_system.file_system.', '', $idService);
+        $this->directoryPublic = $directoryPublic.'/data/bundle/kitpagesFileSystem/'.$idService;
+        $this->directoryPrivate = $directoryPrivate.'/data/bundle/kitpagesFileSystem/'.$idService;
+        $this->baseUrl = $baseUrl.'/data/bundle/kitpagesFileSystem/'.$idService.'/';
 
     }
 
@@ -62,7 +57,7 @@ class Local implements AdapterInterface {
         $tempFilePath = $this->getPath($tempFile);
         $targetFilePath = $this->getPath($targetFile);
 
-        $this->mkdirr(dirname($targetFilePath), false);
+        $this->getUtil()->mkdirr(dirname($targetFilePath));
         return rename($tempFilePath, $targetFilePath);
     }
 
@@ -84,8 +79,7 @@ class Local implements AdapterInterface {
         $targetFilePath = $this->getPath($targetFile);
         $targetFileCopyPath = $this->getPath($targetFileCopy);
 
-        $targetDir = dirname($targetFileCopyPath);
-        $this->mkdirr($targetDir, true);
+        $this->getUtil()->mkdirr(dirname($targetFileCopyPath));
 
         if ($this->isFile($targetFile)) {
             return copy($targetFilePath, $targetFileCopyPath) ;
@@ -98,9 +92,7 @@ class Local implements AdapterInterface {
         $targetFilePath = $tempPath;
         $targetFileCopyPath = $this->getPath($file);
 
-        $targetDir = dirname($targetFileCopyPath);
-        $this->mkdirr($targetDir, true);
-
+        $this->getUtil()->mkdirr(dirname($targetFileCopyPath));
         if (is_file($tempPath)) {
             return copy($targetFilePath, $targetFileCopyPath) ;
         }
@@ -109,24 +101,14 @@ class Local implements AdapterInterface {
 
     function moveAdapterToTemp(AdapterFileInterface $file, $tempPath)
     {
-        $targetFileCopyPath = $tempPath;
         $targetFilePath = $this->getPath($file);
 
-        $targetDir = dirname($targetFileCopyPath);
-        $this->mkdirr($targetDir, true);
+        $this->getUtil()->mkdirr(dirname($tempPath));
 
-        if (is_file($tempPath)) {
-            return copy($targetFilePath, $targetFileCopyPath) ;
+        if (is_file($targetFilePath)) {
+            return copy($targetFilePath, $tempPath) ;
         }
         return false;
-    }
-
-    public function mkdirr($targetDir, $overwrite = false)
-    {
-        if ($overwrite) {
-            $this->getUtil()->rmdirr($targetDir);
-        }
-        return $this->getUtil()->mkdirr($targetDir);
     }
 
     public function rmdirr(AdapterFileInterface $directory)
@@ -159,6 +141,6 @@ class Local implements AdapterInterface {
 
     public function getFileLocation(AdapterFileInterface $targetFile)
     {
-        return $this->baseUrl.'/'.$targetFile->getPath();
+        return $this->baseUrl.$targetFile->getPath();
     }
 }

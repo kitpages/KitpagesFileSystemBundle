@@ -29,6 +29,8 @@ You need to add the following lines in your deps :
         git=https://github.com/amazonwebservices/aws-sdk-for-php
         target=aws-sdk
 
+AppKernel.php
+            new Kitpages\FileSystemBundle\KitpagesFileSystemBundle(),
 
 // AWS SDK needs a special autoloader
 require_once __DIR__.'/../vendor/aws-sdk/sdk.class.php';

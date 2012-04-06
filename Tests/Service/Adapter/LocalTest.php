@@ -7,7 +7,10 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\DoctrineBundle\Registry;
 
 use Kitpages\FileSystemBundle\ValueObject\AdapterFile;
+use Kitpages\FileSystemBundle\Test\AbstractAdapterTest;
 
-class LocalTest  extends \PHPUnit_Framework_TestCase{
+class LocalTest extends AbstractAdapterTest{ // extends \PHPUnit_Framework_TestCase{
+
+    protected $adapterClass = 'Local';
 
 }
