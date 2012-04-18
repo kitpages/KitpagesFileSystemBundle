@@ -31,6 +31,10 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
             }
         }
 
+        if (!is_dir(dirname(__FILE__).'/../Tests/tmp')) {
+            mkdir(dirname(__FILE__).'/../Tests/tmp');
+        }
+
 
         $this->pathFileLocal = dirname(__FILE__).'/../Tests/tmp/testAmazon.txt';
         $this->pathFileAdapter = 'test/testAmazon.txt';
