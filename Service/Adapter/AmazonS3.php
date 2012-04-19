@@ -105,7 +105,7 @@ class AmazonS3 implements AdapterInterface{
         fclose($resTargetFileCopy);
 
         if ($file->getMimeType() == null) {
-            $this->getMimeContentType($tempPath);
+            $file->setMimeType($this->getMimeContentType($tempPath));
         }
 
         $this->fileSetAclAndContentType($file, $file->getMimeType());
@@ -159,7 +159,11 @@ class AmazonS3 implements AdapterInterface{
 
     public function rmdirr(AdapterFileInterface $directory)
     {
-        return $this->s3->delete_object($this->bucketName, $this->getPath($directory));
+        $list = $this->s3->get_object_list($this->bucketName, array('prefix' => $this->getPath($directory)));
+        $listDelete = array_map(function($v){return array("key"=>$v);}, $list);
+        $result = $this->s3->delete_objects($this->bucketName, array('objects' => $listDelete));
+        return $result->isOK();
+//        return $this->s3->delete_object($this->bucketName, $this->getPath($directory));
     }
 
     // information

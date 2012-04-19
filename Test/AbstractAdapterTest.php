@@ -93,6 +93,30 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
         }
     }
 
+    public function testRmdirr()
+    {
+        foreach($this->adapterList as $adapter) {
+            $result = $adapter->moveTempToAdapter($this->pathFileLocal, $this->fileAdapter);
+            $this->assertEquals(filesize($this->pathFileLocal), $result);
+
+            $pathDirAdapter = dirname($this->pathFileAdapter);
+
+            $dirAdapter = new AdapterFile($pathDirAdapter, false);
+
+            $resultRmdirr = $adapter->rmdirr($dirAdapter);
+            if($resultRmdirr === false) {
+                $result = false;
+            } else {
+                $result = true;
+            }
+            $this->assertTrue($result);
+
+            $resultIsFile = $adapter->isFile($this->fileAdapter);
+            $this->assertEquals($resultIsFile, false);
+
+        }
+    }
+
     public function testIsFile()
     {
         foreach($this->adapterList as $adapter) {
@@ -192,7 +216,6 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
     }
 
     // information
-
 //    public function testImage()
 //    {
 //        $fileImageAmazon = new AdapterFile('tools.jpg', false);
@@ -238,5 +261,27 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
         }
     }
 
+    public function testGetFileContent()
+    {
+        foreach($this->adapterList as $adapter) {
+
+            $result = $adapter->moveTempToAdapter($this->pathFileLocal, $this->fileAdapter);
+            $this->assertEquals(filesize($this->pathFileLocal), $result);
+
+            $url = $adapter->getFileLocation($this->fileAdapter);
+
+            $this->assertEquals($adapter->getFileContent($this->fileAdapter), file_get_contents($url));
+
+
+            $resultIsFile = $adapter->isFile($this->fileAdapter);
+            $this->assertEquals($resultIsFile, true);
+
+                        $adapter->unlink($this->fileAdapter);
+
+                        $resultIsFile = $adapter->isFile($this->fileAdapter);
+                        $this->assertEquals($resultIsFile, false);
+
+        }
+    }
 
 }

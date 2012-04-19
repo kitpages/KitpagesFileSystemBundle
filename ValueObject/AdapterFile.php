@@ -32,4 +32,9 @@ class AdapterFile implements AdapterFileInterface {
         return $this->mimeType;
     }
 
+    public function setMimeType($mimeType)
+    {
+        $this->mimeType = $mimeType;
+    }
+
 }

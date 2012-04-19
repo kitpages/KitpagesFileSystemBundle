@@ -13,4 +13,6 @@ interface AdapterFileInterface  {
 
     function getMimeType();
 
+    function setMimeType($mimeType);
+
 }
