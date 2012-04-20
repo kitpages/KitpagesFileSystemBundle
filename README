@@ -29,6 +29,7 @@ Only if you use AmazonS3
     [aws-sdk]
         git=http://github.com/amazonwebservices/aws-sdk-for-php
         target=aws-sdk
+        version=1.5.4
 
 AppKernel.php
         $bundles = array(
