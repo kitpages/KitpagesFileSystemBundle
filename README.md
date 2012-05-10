@@ -51,6 +51,7 @@ The following configuration defines 2 filesystems :
 * kitpagesFile : a local filesystem
 * kitpagesAmazon : a filesystem on Amazon S3
 
+Let's see the configuration in config.yml
 
     kitpages_file_system:
         file_system_list:
