@@ -43,20 +43,48 @@ require_once __DIR__.'/../vendor/aws-sdk/sdk.class.php';
 
 Configuration example
 =====================
+The following configuration defines 2 filesystems :
 
-kitpages_file_system:
-    file_system_list:
-        kitpagesFile:
-            local:
-                directory_public: %kernel.root_dir%/../web
-                directory_private: %kernel.root_dir%
-                base_url: %base_url%
-        kitpagesAmazon:
-            amazon_s3:
-                bucket_name: %kitpagesFile_amazons3_bucketname%
-                key: %kitpagesFile_amazons3_key%
-                secret_key: %kitpagesFile_amazons3_secretkey%
+* kitpagesFile : a local filesystem
+* kitpagesAmazon : a filesystem on Amazon S3
+
+    kitpages_file_system:
+        file_system_list:
+            kitpagesFile:
+                local:
+                    directory_public: %kernel.root_dir%/../web
+                    directory_private: %kernel.root_dir%
+                    base_url: %base_url%
+            kitpagesAmazon:
+                amazon_s3:
+                    bucket_name: %kitpagesFile_amazons3_bucketname%
+                    key: %kitpagesFile_amazons3_key%
+                    secret_key: %kitpagesFile_amazons3_secretkey%
 
 Usage example
 =============
 
+    // use AdapterFile at the beginning of the file
+    use Kitpages\FileSystemBundle\Model\AdapterFile;
+
+    // get the adapter
+    $localAdapter = $this->get("kitpages_file_system.file_system.kitpagesFile");
+    $s3Adapter = $this->get("kitpages_file_system.file_system.kitpagesAmazon");
+
+    // private files (without direct public URL)
+    $adapter->copyTempToAdapter("/my_physical_dir/foo.txt", new AdapterFile("bar/foo.txt") );
+    $adapter->copyAdapterToTemp(new AdapterFile("bar/foo.txt"), "/my_physical_dir/foo.txt" );
+
+    // public files (with a direct URL given by the adapter)
+    $adapter->copyTempToAdapter("/my_physical_dir/foo.txt", new AdapterFile("bar/foo.txt", true) );
+    $url = $adapter->getFileLocation(new AdapterFile("bar/foo.txt", true));
+
+    // some functions of the adapter :
+    $adapterFile = new AdapterFile("bar/foo.txt");
+    $adapter->copyTempToAdapter("/my_physical_dir/foo.txt", $adapterFile );
+    $content = $adapter->getFileContent($adapterFile);
+    $adapter->sendFileToBrowser($adapterFile);
+    if ($adapter->isFile($adapterFile) ) {
+        // if file exists in the adapter
+    }
+    
