@@ -6,7 +6,7 @@ namespace Kitpages\FileSystemBundle\Service\Adapter;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\DoctrineBundle\Registry;
 
-use Kitpages\FileSystemBundle\ValueObject\AdapterFileInterface;
+use Kitpages\FileSystemBundle\Model\AdapterFileInterface;
 
 class AmazonS3 implements AdapterInterface{
     ////

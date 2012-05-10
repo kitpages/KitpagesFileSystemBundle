@@ -2,7 +2,7 @@
 
 namespace Kitpages\FileSystemBundle\Service\Adapter;
 
-use Kitpages\FileSystemBundle\ValueObject\AdapterFileInterface;
+use Kitpages\FileSystemBundle\Model\AdapterFileInterface;
 
 /**
  * Interface for the filesystem adapters

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kitpages\FileSystemBundle\ValueObject;
+namespace Kitpages\FileSystemBundle\Model;
 
 
 interface AdapterFileInterface  {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Kitpages\FileSystemBundle\ValueObject;
+namespace Kitpages\FileSystemBundle\Model;
 
-use Kitpages\FileSystemBundle\ValueObject\AdapterFileInterface;
+use Kitpages\FileSystemBundle\Model\AdapterFileInterface;
 
 class AdapterFile implements AdapterFileInterface {
 

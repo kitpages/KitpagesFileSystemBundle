@@ -8,7 +8,7 @@ use Symfony\Bundle\DoctrineBundle\Registry;
 
 use Kitpages\UtilBundle\Service\Util;
 
-use Kitpages\FileSystemBundle\ValueObject\AdapterFileInterface;
+use Kitpages\FileSystemBundle\Model\AdapterFileInterface;
 use Kitpages\FileSystemBundle\FileSystemException;
 
 class Local implements AdapterInterface {
