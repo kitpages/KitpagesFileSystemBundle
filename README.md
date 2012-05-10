@@ -1,7 +1,7 @@
 KitpagesFileSystemBundle
 ========================
 
-This is a bundle that provides a filesystem abstraction layer. Basicaly this does the
+This is a symfony2 bundle that provides a filesystem abstraction layer. Basicaly this does the
 same as the gaufrette library from KnpLabs, but it manages much more efficiently big files. We can
 manage a 2GB file with a memory limit of 128Mo for the PHP process. We never transfert the entire
 content in a $content variable.
@@ -26,20 +26,23 @@ You need to add the following lines in your deps :
         target=Kitpages/FileSystemBundle
 
 Only if you use AmazonS3
+
     [aws-sdk]
         git=http://github.com/amazonwebservices/aws-sdk-for-php
         target=aws-sdk
         version=1.5.4
 
 AppKernel.php
-        $bundles = array(
+
+    $bundles = array(
         ...
-            new Kitpages\FileSystemBundle\KitpagesFileSystemBundle(),
-        );
+        new Kitpages\FileSystemBundle\KitpagesFileSystemBundle(),
+    );
 
 // AWS SDK needs a special autoloader
-require_once __DIR__.'/../vendor/aws-sdk/sdk.class.php';
-=======
+
+    require_once __DIR__.'/../vendor/aws-sdk/sdk.class.php';
+
 
 Configuration example
 =====================
@@ -47,6 +50,7 @@ The following configuration defines 2 filesystems :
 
 * kitpagesFile : a local filesystem
 * kitpagesAmazon : a filesystem on Amazon S3
+
 
     kitpages_file_system:
         file_system_list:
@@ -87,4 +91,3 @@ Usage example
     if ($adapter->isFile($adapterFile) ) {
         // if file exists in the adapter
     }
-    
