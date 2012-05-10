@@ -9,6 +9,7 @@ use Symfony\Bundle\DoctrineBundle\Registry;
 use Kitpages\UtilBundle\Service\Util;
 
 use Kitpages\FileSystemBundle\ValueObject\AdapterFileInterface;
+use Kitpages\FileSystemBundle\FileSystemException;
 
 class Local implements AdapterInterface {
     ////
@@ -87,28 +88,33 @@ class Local implements AdapterInterface {
         return false;
     }
 
-    function moveTempToAdapter($tempPath, AdapterFileInterface $file)
+    function copyTempToAdapter($tempPath, AdapterFileInterface $file)
     {
         $targetFilePath = $tempPath;
         $targetFileCopyPath = $this->getPath($file);
 
         $this->getUtil()->mkdirr(dirname($targetFileCopyPath));
-        if (is_file($tempPath)) {
-            return copy($targetFilePath, $targetFileCopyPath) ;
+        if (!is_file($tempPath)) {
+            throw new FileSystemException("Temp file $tempPath does not exist.");
         }
-        return false;
+
+        if ( ! copy($targetFilePath, $targetFileCopyPath) ) {
+            throw new FileSystemException("local copy failed.");
+        }
     }
 
-    function moveAdapterToTemp(AdapterFileInterface $file, $tempPath)
+    function copyAdapterToTemp(AdapterFileInterface $file, $tempPath)
     {
         $targetFilePath = $this->getPath($file);
 
         $this->getUtil()->mkdirr(dirname($tempPath));
 
-        if (is_file($targetFilePath)) {
-            return copy($targetFilePath, $tempPath) ;
+        if (!is_file($targetFilePath)) {
+            throw new FileSystemException("Source file $targetFilePath does not exists");
         }
-        return false;
+        if (! copy($targetFilePath, $tempPath) ) {
+            throw new FileSystemException("Copy of $targetFilePath to temp failed");
+        }
     }
 
     public function rmdirr(AdapterFileInterface $directory)

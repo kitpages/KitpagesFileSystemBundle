@@ -95,7 +95,7 @@ class AmazonS3 implements AdapterInterface{
 
     }
 
-    function moveTempToAdapter($tempPath, AdapterFileInterface $file)
+    function copyTempToAdapter($tempPath, AdapterFileInterface $file)
     {
         $targetFileCopyPath = $this->getPathFull($file);
         $resTargetFile = fopen($tempPath, 'r');
@@ -110,17 +110,17 @@ class AmazonS3 implements AdapterInterface{
 
         $this->fileSetAclAndContentType($file, $file->getMimeType());
 
-        return $resultCopy;
+        //return $resultCopy;
     }
 
-    function moveAdapterToTemp(AdapterFileInterface $file, $tempPath)
+    function copyAdapterToTemp(AdapterFileInterface $file, $tempPath)
     {
         $targetFilePath = $this->getPathFull($file);
         $resTargetFileCopy = fopen($tempPath, 'w');
         $resTargetFile = fopen($targetFilePath, 'r');
         $resultCopy = stream_copy_to_stream($resTargetFile, $resTargetFileCopy);
 
-        return $resultCopy;
+        //return $resultCopy;
     }
 
     public function rename(AdapterFileInterface $tempFile, AdapterFileInterface $targetFile)

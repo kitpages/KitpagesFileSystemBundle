@@ -13,9 +13,9 @@ interface AdapterInterface
     /*********************/
     //action
     /*********************/
-    function moveTempToAdapter($tempPath, AdapterFileInterface $file);
+    function copyTempToAdapter($tempPath, AdapterFileInterface $file);
 
-    function moveAdapterToTemp(AdapterFileInterface $file, $tempPath);
+    function copyAdapterToTemp(AdapterFileInterface $file, $tempPath);
 
     function rename(AdapterFileInterface $tempFile, AdapterFileInterface $targetFile);
 

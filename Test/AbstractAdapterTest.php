@@ -60,16 +60,16 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
     public function testCopyAndMove()
     {
         foreach($this->adapterList as $adapter) {
-            $result = $adapter->moveTempToAdapter($this->pathFileLocal, $this->fileAdapter);
-            $this->assertEquals(filesize($this->pathFileLocal), $result);
+            // transfert with temp
+            $fileSize = filesize($this->pathFileLocal);
+            $adapter->copyTempToAdapter($this->pathFileLocal, $this->fileAdapter);
             unlink($this->pathFileLocal);
+            $adapter->copyAdapterToTemp($this->fileAdapter, $this->pathFileLocal);
+            $this->assertEquals($fileSize, filesize($this->pathFileLocal));
 
-            $result = $adapter->moveAdapterToTemp($this->fileAdapter, $this->pathFileLocal);
-            $this->assertEquals(filesize($this->pathFileLocal), $result);
-
+            // copy inside the adapter
             $adapter->copy($this->fileAdapter, $this->fileAdapter2);
             $resultIsFile = $adapter->isFile($this->fileAdapter2);
-
             $this->assertEquals($resultIsFile, true);
         }
     }
@@ -79,16 +79,14 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
         $this->fileAdapter = new AdapterFile($this->pathFileAdapter, true);
         $this->fileAdapter2 = new AdapterFile($this->pathFileAdapter2, true);
         foreach($this->adapterList as $adapter) {
-            $result = $adapter->moveTempToAdapter($this->pathFileLocal, $this->fileAdapter);
-            $this->assertEquals(filesize($this->pathFileLocal), $result);
+            $fileSize = filesize($this->pathFileLocal);
+            $adapter->copyTempToAdapter($this->pathFileLocal, $this->fileAdapter);
             unlink($this->pathFileLocal);
-
-            $result = $adapter->moveAdapterToTemp($this->fileAdapter, $this->pathFileLocal);
-            $this->assertEquals(filesize($this->pathFileLocal), $result);
+            $adapter->copyAdapterToTemp($this->fileAdapter, $this->pathFileLocal);
+            $this->assertEquals($fileSize, filesize($this->pathFileLocal));
 
             $adapter->copy($this->fileAdapter, $this->fileAdapter2);
             $resultIsFile = $adapter->isFile($this->fileAdapter2);
-
             $this->assertEquals($resultIsFile, true);
         }
     }
@@ -96,8 +94,7 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
     public function testRmdirr()
     {
         foreach($this->adapterList as $adapter) {
-            $result = $adapter->moveTempToAdapter($this->pathFileLocal, $this->fileAdapter);
-            $this->assertEquals(filesize($this->pathFileLocal), $result);
+            $adapter->copyTempToAdapter($this->pathFileLocal, $this->fileAdapter);
 
             $pathDirAdapter = dirname($this->pathFileAdapter);
 
@@ -123,8 +120,7 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
             $resultIsFile = $adapter->isFile($this->fileAdapter);
             $this->assertEquals($resultIsFile, false);
 
-            $result = $adapter->moveTempToAdapter($this->pathFileLocal, $this->fileAdapter);
-            $this->assertEquals(filesize($this->pathFileLocal), $result);
+            $adapter->copyTempToAdapter($this->pathFileLocal, $this->fileAdapter);
 
             $resultIsFile = $adapter->isFile($this->fileAdapter);
             $this->assertEquals($resultIsFile, true);
@@ -139,8 +135,7 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
             $resultIsFile = $adapter->isFile($this->fileAdapter);
             $this->assertEquals($resultIsFile, false);
 
-            $result = $adapter->moveTempToAdapter($this->pathFileLocal, $this->fileAdapter);
-            $this->assertEquals(filesize($this->pathFileLocal), $result);
+            $adapter->copyTempToAdapter($this->pathFileLocal, $this->fileAdapter);
 
             $resultIsFile = $adapter->isFile($this->fileAdapter);
             $this->assertEquals($resultIsFile, true);
@@ -150,8 +145,7 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
     public function testUnlink()
     {
         foreach($this->adapterList as $adapter) {
-            $result = $adapter->moveTempToAdapter($this->pathFileLocal, $this->fileAdapter);
-            $this->assertEquals(filesize($this->pathFileLocal), $result);
+            $adapter->copyTempToAdapter($this->pathFileLocal, $this->fileAdapter);
             $adapter->unlink($this->fileAdapter);
 
             $resultIsFile = $adapter->isFile($this->fileAdapter);
@@ -164,8 +158,7 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
         $this->fileAdapter = new AdapterFile($this->pathFileAdapter, true);
         $this->fileAdapter2 = new AdapterFile($this->pathFileAdapter2, true);
         foreach($this->adapterList as $adapter) {
-            $result = $adapter->moveTempToAdapter($this->pathFileLocal, $this->fileAdapter);
-            $this->assertEquals(filesize($this->pathFileLocal), $result);
+            $adapter->copyTempToAdapter($this->pathFileLocal, $this->fileAdapter);
             $adapter->unlink($this->fileAdapter);
 
             $resultIsFile = $adapter->isFile($this->fileAdapter);
@@ -177,13 +170,14 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
     public function testRename()
     {
         foreach($this->adapterList as $adapter) {
-            $result = $adapter->moveTempToAdapter($this->pathFileLocal, $this->fileAdapter);
-            $this->assertEquals(filesize($this->pathFileLocal), $result);
+            $adapter->copyTempToAdapter($this->pathFileLocal, $this->fileAdapter);
 
             $adapter->rename($this->fileAdapter, $this->fileAdapter2);
 
-            $resultIsFile = $adapter->isFile($this->fileAdapter2);
-            $this->assertEquals($resultIsFile, true);
+            $resultIsFile1 = $adapter->isFile($this->fileAdapter);
+            $resultIsFile2 = $adapter->isFile($this->fileAdapter2);
+            $this->assertEquals($resultIsFile1, false);
+            $this->assertEquals($resultIsFile2, true);
         }
     }
 
@@ -192,8 +186,7 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
         $this->fileAdapter = new AdapterFile($this->pathFileAdapter, false);
         $this->fileAdapter2 = new AdapterFile($this->pathFileAdapter2, true);
         foreach($this->adapterList as $adapter) {
-            $result = $adapter->moveTempToAdapter($this->pathFileLocal, $this->fileAdapter);
-            $this->assertEquals(filesize($this->pathFileLocal), $result);
+            $adapter->copyTempToAdapter($this->pathFileLocal, $this->fileAdapter);
 
             $url = $adapter->getFileLocation($this->fileAdapter);
             $this->assertEquals(file_get_contents($url), file_get_contents($this->pathFileLocal));
@@ -219,15 +212,14 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
 //    public function testImage()
 //    {
 //        $fileImageAmazon = new AdapterFile('tools.jpg', false);
-//        $result = $adapter->moveTempToAdapter('/home/webadmin/htdocs/sfkitsite/app/data/tmp/tools.jpg', $fileImageAmazon);
+//        $adapter->copyTempToAdapter('/home/webadmin/htdocs/sfkitsite/app/data/tmp/tools.jpg', $fileImageAmazon);
 //        $adapter->sendFileToBrowser($fileImageAmazon);
 //        $adapter->unlink($fileImageAmazon);
 //    }
 
 //    public function testSendFileToBrowser()
 //    {
-//        $result = $adapter->moveTempToAdapter($this->pathFileLocal, $this->fileAdapter);
-//        $this->assertEquals(filesize($this->pathFileLocal), $result);
+//        $adapter->copyTempToAdapter($this->pathFileLocal, $this->fileAdapter);
 //
 //        $adapter->sendFileToBrowser($this->fileAdapter);
 //    }
@@ -236,8 +228,7 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
     {
         $this->fileAdapter = new AdapterFile($this->pathFileAdapter, TRUE);
         foreach($this->adapterList as $adapter) {
-            $result = $adapter->moveTempToAdapter($this->pathFileLocal, $this->fileAdapter);
-            $this->assertEquals(filesize($this->pathFileLocal), $result);
+            $adapter->copyTempToAdapter($this->pathFileLocal, $this->fileAdapter);
 
             $url = $adapter->getFileLocation($this->fileAdapter);
             $handle = curl_init($url);
@@ -253,8 +244,7 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
     public function testGetFileLocation()
     {
         foreach($this->adapterList as $adapter) {
-            $result = $adapter->moveTempToAdapter($this->pathFileLocal, $this->fileAdapter);
-            $this->assertEquals(filesize($this->pathFileLocal), $result);
+            $adapter->copyTempToAdapter($this->pathFileLocal, $this->fileAdapter);
 
             $url = $adapter->getFileLocation($this->fileAdapter);
             $this->assertEquals(file_get_contents($url), file_get_contents($this->pathFileLocal));
@@ -265,8 +255,7 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
     {
         foreach($this->adapterList as $adapter) {
 
-            $result = $adapter->moveTempToAdapter($this->pathFileLocal, $this->fileAdapter);
-            $this->assertEquals(filesize($this->pathFileLocal), $result);
+            $adapter->copyTempToAdapter($this->pathFileLocal, $this->fileAdapter);
 
             $url = $adapter->getFileLocation($this->fileAdapter);
 
@@ -276,10 +265,10 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
             $resultIsFile = $adapter->isFile($this->fileAdapter);
             $this->assertEquals($resultIsFile, true);
 
-                        $adapter->unlink($this->fileAdapter);
+            $adapter->unlink($this->fileAdapter);
 
-                        $resultIsFile = $adapter->isFile($this->fileAdapter);
-                        $this->assertEquals($resultIsFile, false);
+            $resultIsFile = $adapter->isFile($this->fileAdapter);
+            $this->assertEquals($resultIsFile, false);
 
         }
     }

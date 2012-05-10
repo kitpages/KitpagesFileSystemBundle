@@ -39,6 +39,12 @@ class FilesystemMap
         return $this->map[$name];
     }
 
+    /**
+     * return a list of filesystems with the name of the file system as the key and the adapter as the value (as
+     * values defined in the config.yml)
+     * @return array
+     * @example : array("kitsiteTest" => $adapter1);
+     */
     public function getAdapterList()
     {
         return $this->map;
