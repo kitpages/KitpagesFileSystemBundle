@@ -1,0 +1,26 @@
+{
+    "name": "kitpages/file-system-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony Kitpages FileSystem Bundle. Abstraction layer for files (local, S3)",
+    "keywords": ["FileSystem", "File abstraction layer", "gaufrette"],
+    "homepage": "https://github.com/kitpages/KitpagesDataGridBundle",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Sebastien Lefebvre"
+        },
+        {
+            "name": "Philippe Le Van",
+            "homepage": "https://twitter.com/#!/plv"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/framework-bundle": "2.0.*",
+        "kitpages/util": "*"
+    },
+    "autoload": {
+        "psr-0": { "Kitpages\\FileSystemBundle": "" }
+    },
+    "target-dir": "Kitpages/FileSystemBundle"
+}
