@@ -17,7 +17,7 @@
     "require": {
         "php": ">=5.3.2",
         "symfony/framework-bundle": "2.0.*",
-        "kitpages/util": "*"
+        "kitpages/util-bundle": "*"
     },
     "autoload": {
         "psr-0": { "Kitpages\\FileSystemBundle": "" }
