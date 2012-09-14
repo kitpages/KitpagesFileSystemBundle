@@ -21,6 +21,7 @@ class AmazonS3AdapterFactory implements AdapterFactoryInterface
 
         $container
             ->setDefinition($id, new DefinitionDecorator('kitpages_file_system.adapter.amazon_s3'))
+            ->addArgument(new Reference('kitpages.util'))
             ->addArgument($config['bucket_name'])
             ->addArgument($config['key'])
             ->addArgument($config['secret_key'])
