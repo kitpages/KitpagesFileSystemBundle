@@ -1,7 +1,7 @@
 KitpagesFileSystemBundle
 ========================
 
-This is a symfony2 bundle that provides a filesystem abstraction layer. Basicaly this does the
+This is a Symfony2 bundle that provides a filesystem abstraction layer. Basicaly this does the
 same as the gaufrette library from KnpLabs, but it manages much more efficiently big files. We can
 manage a 2GB file with a memory limit of 128Mo for the PHP process. We never transfert the entire
 content in a $content variable.
@@ -10,9 +10,15 @@ With this bundle you can save your files on different filesystems (S3, Local fil
 
 Some elements of the configuration system are based on the code of the KnpGaufretteBundle.
 
+Versions
+========
+
+2012-05-24 : v1.0.0
+* first stable release
+
 Actual state
 ============
-This bundle is in alpha state. The first adapters are :
+This bundle is stable. The first adapters are :
 
 * Local adapter : file system of the server
 * S3 adapter : for Amazon Web Service AWS S3
