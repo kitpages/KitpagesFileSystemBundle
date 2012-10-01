@@ -117,7 +117,7 @@ class AmazonS3 implements AdapterInterface{
         fclose($resTargetFileCopy);
 
         if ($file->getMimeType() == null) {
-            $file->setMimeType($this->getMimeContentType($tempPath));
+            $file->setMimeType($this->getMimeContentType($tempPath, $file->getPath()));
         }
 
         $this->fileSetAclAndContentType($file, $file->getMimeType());
@@ -254,9 +254,9 @@ class AmazonS3 implements AdapterInterface{
         return $this->s3->get_object_url($this->bucketName, $this->getPath($targetFile));
     }
 
-    public function getMimeContentType($fileName)
+    public function getMimeContentType($file, $fileName)
     {
-        return $this->util->getMimeContentType($fileName);
+        return $this->util->getMimeContentType($file, $fileName);
     }
 
 }
