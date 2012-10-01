@@ -207,7 +207,11 @@ class AmazonS3 implements AdapterInterface{
         $headers = $this->s3->get_object_headers($this->bucketName, $this->getPath($targetFile));
         $header = $headers->header;
 
-        $ctype = $header['content-type'];
+        if ($targetFile->getMimeType() != null) {
+            $ctype = $targetFile->getMimeType();
+        } else {
+            $ctype = $header['content-type'];
+        }
 
         header('Cache-Control: public, max-age=0');
         header('Expires: '.gmdate("D, d M Y H:i:s", time())." GMT");
