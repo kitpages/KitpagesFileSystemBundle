@@ -17,7 +17,10 @@
     "require": {
         "php": ">=5.3.2",
         "symfony/framework-bundle": "2.1.*",
-        "kitpages/util-bundle": "*"
+        "kitpages/util-bundle": "2.1.*"
+    },
+    "require-dev": {
+        "kitpages/util-bundle": "dev-master"
     },
     "suggest": {
         "amazonwebservices/aws-sdk-for-php": "*"
@@ -25,6 +28,5 @@
     "autoload": {
         "psr-0": { "Kitpages\\FileSystemBundle": "" }
     },
-    "target-dir": "Kitpages/FileSystemBundle",
-    "minimum-stability": "dev"
+    "target-dir": "Kitpages/FileSystemBundle"
 }
