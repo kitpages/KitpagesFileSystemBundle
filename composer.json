@@ -25,5 +25,6 @@
     "autoload": {
         "psr-0": { "Kitpages\\FileSystemBundle": "" }
     },
-    "target-dir": "Kitpages/FileSystemBundle"
+    "target-dir": "Kitpages/FileSystemBundle",
+    "minimum-stability": "dev"
 }
