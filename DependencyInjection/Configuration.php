@@ -53,10 +53,10 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('file_system_list')
                     ->useAttributeAsKey('filesystem')
-                        ->prototype('array')
-                            ->useAttributeAsKey('adapter')
-                                ->performNoDeepMerging()
-                                ->children()
+                    ->prototype('array')
+                        ->useAttributeAsKey('adapter')
+                            ->performNoDeepMerging()
+                            ->children()
         ;
 
         foreach ($factories as $name => $factory) {
