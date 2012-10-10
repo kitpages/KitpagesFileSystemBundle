@@ -37,7 +37,7 @@ class Configuration implements ConfigurationInterface
         $this->addMainSection($rootNode, $this->factories);
 
         $rootNode
-            // add a faux-entry for factories, so that no validation error is thrown
+        // add a faux-entry for factories, so that no validation error is thrown
             ->fixXmlConfig('factory', 'factories')
             ->children()
                 ->arrayNode('factories')->ignoreExtraKeys()->end()
@@ -53,10 +53,10 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->arrayNode('file_system_list')
                     ->useAttributeAsKey('filesystem')
+                    ->useAttributeAsKey('adapter')
                     ->prototype('array')
-                        ->useAttributeAsKey('adapter')
-                            ->performNoDeepMerging()
-                            ->children()
+                        ->performNoDeepMerging()
+                        ->children()
         ;
 
         foreach ($factories as $name => $factory) {
