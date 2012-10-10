@@ -4,7 +4,6 @@ namespace Kitpages\FileSystemBundle\Test;
 
 // external service
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Bundle\DoctrineBundle\Registry;
 
 use Kitpages\FileSystemBundle\Model\AdapterFile;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
