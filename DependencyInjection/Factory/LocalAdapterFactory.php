@@ -21,6 +21,7 @@ class LocalAdapterFactory implements AdapterFactoryInterface
         $container
             ->setDefinition($id, new DefinitionDecorator('kitpages_file_system.adapter.local'))
             ->addArgument(new Reference('kitpages.util'))
+            ->addArgument(new Reference('event_dispatcher'))
             ->addArgument($config['directory_public'])
             ->addArgument($config['directory_private'])
             ->addArgument($config['base_url'])

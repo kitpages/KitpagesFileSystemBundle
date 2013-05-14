@@ -4,22 +4,29 @@ namespace Kitpages\FileSystemBundle\Service\Adapter;
 
 // external service
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Bundle\DoctrineBundle\Registry;
+
+use Kitpages\FileSystemBundle\KitpagesFileSystemEvents;
 
 use Kitpages\UtilBundle\Service\Util;
 
 use Kitpages\FileSystemBundle\Model\AdapterFileInterface;
+use Kitpages\FileSystemBundle\Event\AdapterFileEvent;
 use Kitpages\FileSystemBundle\FileSystemException;
 
 class Local implements AdapterInterface {
     ////
     // dependency injection
     ////
-    protected $directory = null;
+    protected $directoryPublic = null;
+    protected $directoryPrivate = null;
     protected $baseUrl = null;
+    protected $dispatcher = null;
+    protected $util = null;
+    protected $idService = null;
 
     public function __construct(
         Util $util,
+        EventDispatcherInterface $dispatcher,
         $directoryPublic,
         $directoryPrivate,
         $baseUrl,
@@ -27,11 +34,11 @@ class Local implements AdapterInterface {
     )
     {
         $this->util = $util;
-
-        $idService = str_replace('kitpages_file_system.file_system.', '', $idService);
-        $this->directoryPublic = $directoryPublic.'/data/bundle/kitpagesFileSystem/'.$idService;
-        $this->directoryPrivate = $directoryPrivate.'/data/bundle/kitpagesFileSystem/'.$idService;
-        $this->baseUrl = $baseUrl.'/data/bundle/kitpagesFileSystem/'.$idService.'/';
+        $this->dispatcher = $dispatcher;
+        $this->idService = str_replace('kitpages_file_system.file_system.', '', $idService);
+        $this->directoryPublic = $directoryPublic.'/data/bundle/kitpagesFileSystem/'.$this->idService;
+        $this->directoryPrivate = $directoryPrivate.'/data/bundle/kitpagesFileSystem/'.$this->idService;
+        $this->baseUrl = $baseUrl.'/data/bundle/kitpagesFileSystem/'.$this->idService.'/';
 
     }
 
@@ -135,8 +142,18 @@ class Local implements AdapterInterface {
 
     public function sendFileToBrowser(AdapterFileInterface $targetFile, $name = null)
     {
-        $targetFilePath = $this->getPath($targetFile);
-        $this->getUtil()->getFile($targetFilePath, 0, null, $name);
+        // throw on event
+        $event = new AdapterFileEvent($this->idService, $targetFile);
+        $this->dispatcher->dispatch(KitpagesFileSystemEvents::onSendFileToBrowser, $event);
+
+        // preventable action
+        if (!$event->isDefaultPrevented()) {
+            $targetFile = $event->getAdapterFile();
+            $targetFilePath = $this->getPath($targetFile);
+            $this->getUtil()->getFile($targetFilePath, 0, null, $name);
+        }
+        // throw after event
+        $this->dispatcher->dispatch(KitpagesFileSystemEvents::afterSendFileToBrowser, $event);
     }
 
     public function getFileContent(AdapterFileInterface $targetFile)

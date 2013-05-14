@@ -4,9 +4,11 @@ namespace Kitpages\FileSystemBundle\Service\Adapter;
 
 // external service
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Bundle\DoctrineBundle\Registry;
+
+use Kitpages\FileSystemBundle\KitpagesFileSystemEvents;
 
 use Kitpages\FileSystemBundle\Model\AdapterFileInterface;
+use Kitpages\FileSystemBundle\Event\AdapterFileEvent;
 use Kitpages\UtilBundle\Service\Util;
 
 class AmazonS3 implements AdapterInterface{
@@ -20,9 +22,11 @@ class AmazonS3 implements AdapterInterface{
     protected $idService = null;
     protected $protocol = null;
     protected $util = null;
+    protected $dispatcher = null;
 
     public function __construct(
         Util $util,
+        EventDispatcherInterface $dispatcher,
         $bucketName,
         $key,
         $secretKey,
@@ -30,6 +34,7 @@ class AmazonS3 implements AdapterInterface{
     )
     {
         $this->util = $util;
+        $this->dispatcher = $dispatcher;
         $protocolList = stream_get_wrappers();
         $countProtocolAmazon = 1;
         $protocolFree = false;
@@ -203,39 +208,50 @@ class AmazonS3 implements AdapterInterface{
             ini_set('zlib.output_compression', 'Off');
         }
 
+        // throw on event
+        $event = new AdapterFileEvent($this->idService, $targetFile);
+        $this->dispatcher->dispatch(KitpagesFileSystemEvents::onSendFileToBrowser, $event);
 
-        $headers = $this->s3->get_object_headers($this->bucketName, $this->getPath($targetFile));
-        $header = $headers->header;
+        // preventable action
+        if (!$event->isDefaultPrevented()) {
+            $targetFile = $event->getAdapterFile();
 
-        if ($targetFile->getMimeType() != null) {
-            $ctype = $targetFile->getMimeType();
-        } else {
-            $ctype = $header['content-type'];
-        }
 
-        header('Cache-Control: public, max-age=0');
-        header('Expires: '.gmdate("D, d M Y H:i:s", time())." GMT");
-        header('Pragma: cache');
-        header('Content-type: '.$ctype);
-        header('Content-length: '.$header['content-length']);
-        if ($name != null) {
-            header("Content-Disposition: attachment; filename=\"" . $name . "\"");
-        }
+            $headers = $this->s3->get_object_headers($this->bucketName, $this->getPath($targetFile));
+            $header = $headers->header;
 
-        $chunksize = 1*(1024*1024); // how many bytes per chunk
-        $buffer = '';
-        $cnt =0;
-        $handle = fopen($this->getPathFull($targetFile), 'rb');
-        if ($handle === false) {
-            return false;
+            if ($targetFile->getMimeType() != null) {
+                $ctype = $targetFile->getMimeType();
+            } else {
+                $ctype = $header['content-type'];
+            }
+
+            header('Cache-Control: public, max-age=0');
+            header('Expires: '.gmdate("D, d M Y H:i:s", time())." GMT");
+            header('Pragma: cache');
+            header('Content-type: '.$ctype);
+            header('Content-length: '.$header['content-length']);
+            if ($name != null) {
+                header("Content-Disposition: attachment; filename=\"" . $name . "\"");
+            }
+
+            $chunksize = 1*(1024*1024); // how many bytes per chunk
+            $buffer = '';
+            $cnt =0;
+            $handle = fopen($this->getPathFull($targetFile), 'rb');
+            if ($handle === false) {
+                return false;
+            }
+            while (!feof($handle)) {
+                $buffer = fread($handle, $chunksize);
+                echo $buffer;
+                ob_flush();
+                flush();
+            }
+            $status = fclose($handle);
         }
-        while (!feof($handle)) {
-            $buffer = fread($handle, $chunksize);
-            echo $buffer;
-            ob_flush();
-            flush();
-        }
-        $status = fclose($handle);
+        // throw after event
+        $this->dispatcher->dispatch(KitpagesFileSystemEvents::afterSendFileToBrowser, $event);
         if ($status) {
             return $cnt; // return num. bytes delivered like readfile() does.
         }
