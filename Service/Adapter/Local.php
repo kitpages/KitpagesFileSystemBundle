@@ -144,6 +144,7 @@ class Local implements AdapterInterface {
     {
         // throw on event
         $event = new AdapterFileEvent($this->idService, $targetFile);
+        $event->setData('nameFile', $name);
         $this->dispatcher->dispatch(KitpagesFileSystemEvents::onSendFileToBrowser, $event);
 
         // preventable action
