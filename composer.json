@@ -17,7 +17,7 @@
     "require": {
         "php": ">=5.3.2",
         "symfony/framework-bundle": "*",
-        "kitpages/util-bundle": "2.1.*"
+        "kitpages/util-bundle": "*"
     },
     "require-dev": {
         "kitpages/util-bundle": "dev-master"
