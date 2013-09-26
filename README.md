@@ -27,28 +27,39 @@ Installation
 ============
 You need to add the following lines in your deps :
 
-    [FileSystemBundle]
-        git=git://github.com/kitpages/KitpagesFileSystemBundle.git
-        target=Kitpages/FileSystemBundle
+Using [Composer](http://getcomposer.org/), just `$ composer require kitpages/file-system-bundle` package or:
+
+``` javascript
+{
+  "require": {
+    "kitpages/file-system-bundle": "dev-master"
+  }
+}
+```
 
 Only if you use AmazonS3
-
-    [aws-sdk]
-        git=http://github.com/amazonwebservices/aws-sdk-for-php
-        target=aws-sdk
-        version=1.5.4
+``` javascript
+{
+  "require": {
+    amazonwebservices/aws-sdk-for-php: ~1.5
+  }
+}
+```
 
 AppKernel.php
 
-    $bundles = array(
-        ...
-        new Kitpages\FileSystemBundle\KitpagesFileSystemBundle(),
-    );
+```php
+$bundles = array(
+    ...
+    new Kitpages\FileSystemBundle\KitpagesFileSystemBundle(),
+);
+```
 
 // AWS SDK needs a special autoloader
 
-    require_once __DIR__.'/../vendor/aws-sdk/sdk.class.php';
-
+```php
+require_once __DIR__.'/../vendor/aws-sdk/sdk.class.php';
+```
 
 Configuration example
 =====================
@@ -59,42 +70,46 @@ The following configuration defines 2 filesystems :
 
 Let's see the configuration in config.yml
 
-    kitpages_file_system:
-        file_system_list:
-            kitpagesFile:
-                local:
-                    directory_public: %kernel.root_dir%/../web
-                    directory_private: %kernel.root_dir%
-                    base_url: %base_url%
-            kitpagesAmazon:
-                amazon_s3:
-                    bucket_name: %kitpagesFile_amazons3_bucketname%
-                    key: %kitpagesFile_amazons3_key%
-                    secret_key: %kitpagesFile_amazons3_secretkey%
+```yaml
+kitpages_file_system:
+    file_system_list:
+        kitpagesFile:
+            local:
+                directory_public: %kernel.root_dir%/../web
+                directory_private: %kernel.root_dir%
+                base_url: %base_url%
+        kitpagesAmazon:
+            amazon_s3:
+                bucket_name: %kitpagesFile_amazons3_bucketname%
+                key: %kitpagesFile_amazons3_key%
+                secret_key: %kitpagesFile_amazons3_secretkey%
+```
 
 Usage example
 =============
 
-    // use AdapterFile at the beginning of the file
-    use Kitpages\FileSystemBundle\Model\AdapterFile;
+```php
+// use AdapterFile at the beginning of the file
+use Kitpages\FileSystemBundle\Model\AdapterFile;
 
-    // get the adapter
-    $localAdapter = $this->get("kitpages_file_system.file_system.kitpagesFile");
-    $s3Adapter = $this->get("kitpages_file_system.file_system.kitpagesAmazon");
+// get the adapter
+$localAdapter = $this->get("kitpages_file_system.file_system.kitpagesFile");
+$s3Adapter = $this->get("kitpages_file_system.file_system.kitpagesAmazon");
 
-    // private files (without direct public URL)
-    $adapter->copyTempToAdapter("/my_physical_dir/foo.txt", new AdapterFile("bar/foo.txt") );
-    $adapter->copyAdapterToTemp(new AdapterFile("bar/foo.txt"), "/my_physical_dir/foo.txt" );
+// private files (without direct public URL)
+$adapter->copyTempToAdapter("/my_physical_dir/foo.txt", new AdapterFile("bar/foo.txt") );
+$adapter->copyAdapterToTemp(new AdapterFile("bar/foo.txt"), "/my_physical_dir/foo.txt" );
 
-    // public files (with a direct URL given by the adapter)
-    $adapter->copyTempToAdapter("/my_physical_dir/foo.txt", new AdapterFile("bar/foo.txt", true) );
-    $url = $adapter->getFileLocation(new AdapterFile("bar/foo.txt", true));
+// public files (with a direct URL given by the adapter)
+$adapter->copyTempToAdapter("/my_physical_dir/foo.txt", new AdapterFile("bar/foo.txt", true) );
+$url = $adapter->getFileLocation(new AdapterFile("bar/foo.txt", true));
 
-    // some functions of the adapter :
-    $adapterFile = new AdapterFile("bar/foo.txt");
-    $adapter->copyTempToAdapter("/my_physical_dir/foo.txt", $adapterFile );
-    $content = $adapter->getFileContent($adapterFile);
-    $adapter->sendFileToBrowser($adapterFile);
-    if ($adapter->isFile($adapterFile) ) {
-        // if file exists in the adapter
-    }
+// some functions of the adapter :
+$adapterFile = new AdapterFile("bar/foo.txt");
+$adapter->copyTempToAdapter("/my_physical_dir/foo.txt", $adapterFile );
+$content = $adapter->getFileContent($adapterFile);
+$adapter->sendFileToBrowser($adapterFile);
+if ($adapter->isFile($adapterFile) ) {
+    // if file exists in the adapter
+}
+```

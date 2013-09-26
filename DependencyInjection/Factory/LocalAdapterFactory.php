@@ -22,6 +22,7 @@ class LocalAdapterFactory implements AdapterFactoryInterface
             ->setDefinition($id, new DefinitionDecorator('kitpages_file_system.adapter.local'))
             ->addArgument(new Reference('kitpages.util'))
             ->addArgument(new Reference('event_dispatcher'))
+            ->addArgument($container->getParameter("kernel.root_dir"))
             ->addArgument($config['directory_public'])
             ->addArgument($config['directory_private'])
             ->addArgument($config['base_url'])
@@ -44,9 +45,9 @@ class LocalAdapterFactory implements AdapterFactoryInterface
     {
         $node
             ->children()
-                ->scalarNode('directory_public')->isRequired()->end()
-                ->scalarNode('directory_private')->isRequired()->end()
-                ->scalarNode('base_url')->isRequired()->end()
+                ->scalarNode('directory_public')->defaultValue(null)->end()
+                ->scalarNode('directory_private')->defaultValue(null)->end()
+                ->scalarNode('base_url')->defaultValue(null)->end()
             ->end()
         ;
     }

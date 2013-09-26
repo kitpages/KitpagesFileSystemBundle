@@ -13,6 +13,7 @@ use Kitpages\FileSystemBundle\Model\AdapterFileInterface;
 use Kitpages\FileSystemBundle\Event\AdapterFileEvent;
 use Kitpages\FileSystemBundle\FileSystemException;
 
+
 class Local implements AdapterInterface {
     ////
     // dependency injection
@@ -21,12 +22,14 @@ class Local implements AdapterInterface {
     protected $directoryPrivate = null;
     protected $baseUrl = null;
     protected $dispatcher = null;
+    protected $kernelRootDir = null;
     protected $util = null;
     protected $idService = null;
 
     public function __construct(
         Util $util,
         EventDispatcherInterface $dispatcher,
+        $kernelRootDir,
         $directoryPublic,
         $directoryPrivate,
         $baseUrl,
@@ -36,10 +39,19 @@ class Local implements AdapterInterface {
         $this->util = $util;
         $this->dispatcher = $dispatcher;
         $this->idService = str_replace('kitpages_file_system.file_system.', '', $idService);
+        if (is_null($directoryPublic)) {
+            $directoryPublic = realpath($kernelRootDir."/../web");
+        }
+        if (is_null($directoryPrivate)) {
+            $directoryPrivate = $kernelRootDir;
+        }
+        if (is_null($baseUrl)) {
+            $baseUrl = "";
+        }
+        $baseUrl = rtrim($baseUrl, "/");
         $this->directoryPublic = $directoryPublic.'/data/bundle/kitpagesFileSystem/'.$this->idService;
         $this->directoryPrivate = $directoryPrivate.'/data/bundle/kitpagesFileSystem/'.$this->idService;
         $this->baseUrl = $baseUrl.'/data/bundle/kitpagesFileSystem/'.$this->idService.'/';
-
     }
 
     /**
