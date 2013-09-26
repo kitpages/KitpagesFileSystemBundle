@@ -50,7 +50,7 @@ class Local implements AdapterInterface {
         return $this->util;
     }
 
-    private function getPath(AdapterFileInterface $file)
+    public function getPath(AdapterFileInterface $file)
     {
         if ($file->getIsPrivate()) {
             return $this->directoryPrivate.'/'.$file->getPath();
