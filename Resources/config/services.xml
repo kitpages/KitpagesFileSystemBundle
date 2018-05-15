@@ -11,6 +11,7 @@
             <!--<argument />&lt;!&ndash; Create &ndash;&gt;-->
         <!--</service>-->
         <service id="kitpages_file_system.adapter.amazon_s3" class="Kitpages\FileSystemBundle\Service\Adapter\AmazonS3" abstract="true" />
+        <service id="kitpages_file_system.adapter.flysystem" class="Kitpages\FileSystemBundle\Service\Adapter\Flysystem" abstract="true" />
         <service id="kitpages_file_system.file_system_map" class="Kitpages\FileSystemBundle\Service\FilesystemMap">
             <argument /> <!-- map of filesystems -->
         </service>
