@@ -13,15 +13,23 @@ Some elements of the configuration system are based on the code of the KnpGaufre
 Versions
 ========
 
+2018-05-15 : v3.2.0
+
+* [new] integration with flysystem
+
+Lot of doc is missing here...
+
 2012-05-24 : v1.0.0
 * first stable release
 
 Actual state
 ============
-This bundle is stable. The first adapters are :
+This bundle is stable. The adapters are :
 
 * Local adapter : file system of the server
 * S3 adapter : for Amazon Web Service AWS S3
+* FTP adapter : for FTP access
+* FlySystem adapater : for a link to flysystem
 
 Installation
 ============
