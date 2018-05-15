@@ -14,6 +14,9 @@
         <service id="kitpages_file_system.adapter.factory.amazon_s3" class="Kitpages\FileSystemBundle\DependencyInjection\Factory\AmazonS3AdapterFactory">
             <tag name="kitpages_file_system.adapter.factory" />
         </service>
+        <service id="kitpages_file_system.adapter.factory.flysystem" class="Kitpages\FileSystemBundle\DependencyInjection\Factory\FlySystemAdapterFactory">
+            <tag name="kitpages_file_system.adapter.factory" />
+        </service>
     </services>
 
 </container>

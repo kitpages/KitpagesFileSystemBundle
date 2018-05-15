@@ -46,6 +46,15 @@ Only if you use AmazonS3
 }
 ```
 
+Only if you use Flysystem
+``` javascript
+{
+  "require": {
+    "league/flysystem": "^1.0",
+    "oneup/flysystem-bundle": "^1.14",
+  }
+}
+```
 AppKernel.php
 
 ```php
@@ -63,10 +72,11 @@ require_once __DIR__.'/../vendor/aws-sdk/sdk.class.php';
 
 Configuration example
 =====================
-The following configuration defines 2 filesystems :
+The following configuration defines 3 filesystems :
 
 * kitpagesFile : a local filesystem
 * kitpagesAmazon : a filesystem on Amazon S3
+* kitpagesFlysystem : another filesystem abstraction
 
 Let's see the configuration in config.yml
 
@@ -83,6 +93,9 @@ kitpages_file_system:
                 bucket_name: %kitpagesFile_amazons3_bucketname%
                 key: %kitpagesFile_amazons3_key%
                 secret_key: %kitpagesFile_amazons3_secretkey%
+        kitpagesFlysystem:
+            flysystem:
+                flysystem_adapter: oneup_flysystem.your_filesystem
 ```
 
 Usage example
