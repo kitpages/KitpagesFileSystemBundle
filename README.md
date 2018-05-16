@@ -13,6 +13,12 @@ Some elements of the configuration system are based on the code of the KnpGaufre
 Versions
 ========
 
+2018-05-16 : v3.2.1
+
+* [fix] url of the file in the flysystem system for swift
+* [fix] fix pb when the file doesn't exist in flysystem adapter
+* [fix] fix mime type problem in flysystem adapter
+
 2018-05-15 : v3.2.0
 
 * [new] integration with flysystem
