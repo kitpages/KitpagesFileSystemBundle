@@ -9,19 +9,25 @@ use League\Flysystem\MountManager;
 
 use Kitpages\FileSystemBundle\Model\AdapterFileInterface;
 use Kitpages\UtilBundle\Service\Util;
+use Techyah\Flysystem\OVH\OVHAdapter;
+use Terradona\Infrastructure\FileBundle\Adapter\OvhCustomAdapter;
 
 class Flysystem implements CmsAdapterInterface
 {
 
     private $filesystem;
+    private $util;
+    private $fileUriPrefix;
 
     public function __construct(
         Util $util,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        $fileUriPrefix = null
     )
     {
         $this->util = $util;
         $this->filesystem = $filesystem;
+        $this->fileUriPrefix = $fileUriPrefix;
 
     }
 
@@ -56,7 +62,9 @@ class Flysystem implements CmsAdapterInterface
 
     public function copy(AdapterFileInterface $targetFile, AdapterFileInterface $targetFileCopy)
     {
-        $this->filesystem->copy($targetFile->getPath(), $targetFileCopy->getPath());
+        if($this->filesystem->has($targetFile->getPath())) {
+            $this->filesystem->copy($targetFile->getPath(), $targetFileCopy->getPath());
+        }
     }
 
     /*********************/
@@ -76,10 +84,11 @@ class Flysystem implements CmsAdapterInterface
             );
         }
         $metadata = $this->filesystem->getMetadata($targetFile->getPath());
+
         if ($targetFile->getMimeType() != null) {
             $ctype = $targetFile->getMimeType();
         } else {
-            $ctype = $metadata['mimetype'];
+            $ctype = $this->filesystem->getMimetype($targetFile->getPath());
         }
 
         header('Cache-Control: public, max-age=0');
@@ -109,7 +118,7 @@ class Flysystem implements CmsAdapterInterface
 
     public function getFileLocation(AdapterFileInterface $targetFile)
     {
-        return $targetFile->getPath();
+        return $this->fileUriPrefix . '/' . $targetFile->getPath();
     }
 
     public function rmdirr(AdapterFileInterface $directory)
