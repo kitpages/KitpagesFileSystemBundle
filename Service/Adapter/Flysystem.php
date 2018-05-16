@@ -9,19 +9,25 @@ use League\Flysystem\MountManager;
 
 use Kitpages\FileSystemBundle\Model\AdapterFileInterface;
 use Kitpages\UtilBundle\Service\Util;
+use Techyah\Flysystem\OVH\OVHAdapter;
+use Terradona\Infrastructure\FileBundle\Adapter\OvhCustomAdapter;
 
 class Flysystem implements CmsAdapterInterface
 {
 
     private $filesystem;
+    private $util;
+    private $fileUriPrefix;
 
     public function __construct(
         Util $util,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        $fileUriPrefix = null
     )
     {
         $this->util = $util;
         $this->filesystem = $filesystem;
+        $this->fileUriPrefix = $fileUriPrefix;
 
     }
 
@@ -109,7 +115,7 @@ class Flysystem implements CmsAdapterInterface
 
     public function getFileLocation(AdapterFileInterface $targetFile)
     {
-        return $targetFile->getPath();
+        return $this->fileUriPrefix . '/' . $targetFile->getPath();
     }
 
     public function rmdirr(AdapterFileInterface $directory)

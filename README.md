@@ -96,6 +96,7 @@ kitpages_file_system:
         kitpagesFlysystem:
             flysystem:
                 flysystem_adapter: oneup_flysystem.your_filesystem
+                file_uri_prefix: https://your.custom.url/4687311687643/FRA/
 ```
 
 Usage example
