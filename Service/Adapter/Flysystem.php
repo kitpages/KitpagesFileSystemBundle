@@ -62,7 +62,9 @@ class Flysystem implements CmsAdapterInterface
 
     public function copy(AdapterFileInterface $targetFile, AdapterFileInterface $targetFileCopy)
     {
-        $this->filesystem->copy($targetFile->getPath(), $targetFileCopy->getPath());
+        if($this->filesystem->has($targetFile->getPath())) {
+            $this->filesystem->copy($targetFile->getPath(), $targetFileCopy->getPath());
+        }
     }
 
     /*********************/
@@ -82,10 +84,11 @@ class Flysystem implements CmsAdapterInterface
             );
         }
         $metadata = $this->filesystem->getMetadata($targetFile->getPath());
+
         if ($targetFile->getMimeType() != null) {
             $ctype = $targetFile->getMimeType();
         } else {
-            $ctype = $metadata['mimetype'];
+            $ctype = $this->filesystem->getMimetype($targetFile->getPath());
         }
 
         header('Cache-Control: public, max-age=0');
