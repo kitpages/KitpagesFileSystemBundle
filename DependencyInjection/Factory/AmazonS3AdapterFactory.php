@@ -4,7 +4,6 @@ namespace Kitpages\FileSystemBundle\DependencyInjection\Factory;
 
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AmazonS3AdapterFactory implements AdapterFactoryInterface
@@ -18,9 +17,12 @@ class AmazonS3AdapterFactory implements AdapterFactoryInterface
     */
     public function create(ContainerBuilder $container, $id, array $config)
     {
+        $class = class_exists('\Symfony\Component\DependencyInjection\ChildDefinition')
+            ? '\Symfony\Component\DependencyInjection\ChildDefinition'
+            : '\Symfony\Component\DependencyInjection\DefinitionDecorator';
 
         $container
-            ->setDefinition($id, new DefinitionDecorator('kitpages_file_system.adapter.amazon_s3'))
+            ->setDefinition($id, new $class('kitpages_file_system.adapter.amazon_s3'))
             ->addArgument(new Reference('kitpages.util'))
             ->addArgument(new Reference('event_dispatcher'))
             ->addArgument($config['bucket_name'])
