@@ -3,13 +3,13 @@
 namespace Kitpages\FileSystemBundle\Service\Adapter;
 
 // external service
+use Kitpages\FileSystemBundle\Util\Util;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 use Kitpages\FileSystemBundle\KitpagesFileSystemEvents;
 
 use Kitpages\FileSystemBundle\Model\AdapterFileInterface;
 use Kitpages\FileSystemBundle\Event\AdapterFileEvent;
-use Kitpages\UtilBundle\Service\Util;
 
 class AmazonS3 implements AdapterInterface{
     ////

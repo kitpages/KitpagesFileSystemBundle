@@ -8,7 +8,7 @@ use League\Flysystem\Filesystem;
 use League\Flysystem\MountManager;
 
 use Kitpages\FileSystemBundle\Model\AdapterFileInterface;
-use Kitpages\UtilBundle\Service\Util;
+use Kitpages\FileSystemBundle\Util\Util;
 use Techyah\Flysystem\OVH\OVHAdapter;
 use Terradona\Infrastructure\FileBundle\Adapter\OvhCustomAdapter;
 
