@@ -10,7 +10,6 @@ class AppKernel extends Kernel
         $bundles = array(
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Kitpages\FileSystemBundle\KitpagesFileSystemBundle(),
-            new Kitpages\UtilBundle\KitpagesUtilBundle(),
         );
         return $bundles;
     }
