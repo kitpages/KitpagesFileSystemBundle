@@ -23,7 +23,7 @@ class FlySystemAdapterFactory implements AdapterFactoryInterface
 
         $container
             ->setDefinition($id, new $class('kitpages_file_system.adapter.flysystem'))
-            ->addArgument(new Reference('kitpages.util'))
+            ->addArgument(new Reference('kitpages_file_system.util'))
             ->addArgument(new Reference($config['flysystem_adapter']))
             ->addArgument($config['file_uri_prefix'])
             ->addArgument($id)
