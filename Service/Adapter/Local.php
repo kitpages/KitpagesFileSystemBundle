@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 use Kitpages\FileSystemBundle\KitpagesFileSystemEvents;
 
-use Kitpages\UtilBundle\Service\Util;
+use Kitpages\FileSystemBundle\Util\Util;
 
 use Kitpages\FileSystemBundle\Model\AdapterFileInterface;
 use Kitpages\FileSystemBundle\Event\AdapterFileEvent;

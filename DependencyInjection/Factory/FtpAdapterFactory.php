@@ -4,7 +4,6 @@ namespace Kitpages\FileSystemBundle\DependencyInjection\Factory;
 
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\DefinitionDecorator;
 
 /**
  * Local adapter factory
@@ -17,8 +16,12 @@ class FtpAdapterFactory implements AdapterFactoryInterface
      */
     public function create(ContainerBuilder $container, $id, array $config)
     {
+        $class = class_exists('\Symfony\Component\DependencyInjection\ChildDefinition')
+            ? '\Symfony\Component\DependencyInjection\ChildDefinition'
+            : '\Symfony\Component\DependencyInjection\DefinitionDecorator';
+
         $container
-            ->setDefinition($id, new DefinitionDecorator('kitpages_file_system.adapter.ftp'))
+            ->setDefinition($id, new $class('kitpages_file_system.adapter.ftp'))
             ->replaceArgument(0, $config['directory'])
             ->replaceArgument(1, $config['create'])
         ;

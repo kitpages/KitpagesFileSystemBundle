@@ -15,6 +15,7 @@
         <service id="kitpages_file_system.file_system_map" class="Kitpages\FileSystemBundle\Service\FilesystemMap">
             <argument /> <!-- map of filesystems -->
         </service>
+        <service id="kitpages_file_system.util" class="Kitpages\FileSystemBundle\Util\Util" />
     </services>
 
 </container>
