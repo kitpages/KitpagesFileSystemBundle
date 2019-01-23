@@ -6,13 +6,9 @@
 
     <services>
         <service id="kitpages_file_system.adapter.local" class="Kitpages\FileSystemBundle\Service\Adapter\Local" abstract="true"/>
-        <!--<service id="kitpages_file_system.adapter.ftp" class="Kitpages\FileSystemBundle\Service\Adapter\Ftp" abstract="true">-->
-            <!--<argument />&lt;!&ndash; Directory &ndash;&gt;-->
-            <!--<argument />&lt;!&ndash; Create &ndash;&gt;-->
-        <!--</service>-->
         <service id="kitpages_file_system.adapter.amazon_s3" class="Kitpages\FileSystemBundle\Service\Adapter\AmazonS3" abstract="true" />
         <service id="kitpages_file_system.adapter.flysystem" class="Kitpages\FileSystemBundle\Service\Adapter\Flysystem" abstract="true" />
-        <service id="kitpages_file_system.file_system_map" class="Kitpages\FileSystemBundle\Service\FilesystemMap">
+        <service id="kitpages_file_system.file_system_map" class="Kitpages\FileSystemBundle\Service\FilesystemMap" public="true">
             <argument /> <!-- map of filesystems -->
         </service>
         <service id="kitpages_file_system.util" class="Kitpages\FileSystemBundle\Util\Util" />

@@ -3,9 +3,6 @@
 namespace Kitpages\FileSystemBundle\Test;
 
 // external service
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Bundle\DoctrineBundle\Registry;
-
 use Kitpages\FileSystemBundle\Model\AdapterFile;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -24,25 +21,25 @@ abstract class AbstractAdapterTest extends WebTestCase{ // extends \PHPUnit_Fram
     {
         $client = static::createClient();
         $container = $client->getContainer();
-        $fileSystemList = $container->get('kitpages_file_system.filesystem_map')->getAdapterList();
+        $fileSystemList = $container->get('kitpages_file_system.file_system_map')->getAdapterList();
         foreach($fileSystemList as $fileSystem) {
             if (get_class($fileSystem) == "Kitpages\FileSystemBundle\Service\Adapter\\".$this->adapterClass) {
                 $this->adapterList[] = $fileSystem;
             }
         }
 
-        if (!is_dir(dirname(__FILE__).'/../Tests/tmp')) {
-            mkdir(dirname(__FILE__).'/../Tests/tmp');
+        if (!is_dir(__DIR__.'/../Tests/tmp')) {
+            mkdir(__DIR__ .'/../Tests/tmp');
         }
 
 
-        $this->pathFileLocal = dirname(__FILE__).'/../Tests/tmp/testAmazon.txt';
+        $this->pathFileLocal = __DIR__ .'/../Tests/tmp/testAmazon.txt';
         $this->pathFileAdapter = 'test/testAmazon.txt';
         $this->pathFileAdapter2 = 'test/testAmazon2.txt';
         $this->fileAdapter = new AdapterFile($this->pathFileAdapter, false);
         $this->fileAdapter2 = new AdapterFile($this->pathFileAdapter2, false);
         $fNew = fopen($this->pathFileLocal, 'w');
-        fputs ($fNew, 'fichier de test');
+        fwrite ($fNew, 'fichier de test');
         fclose($fNew);
     }
 

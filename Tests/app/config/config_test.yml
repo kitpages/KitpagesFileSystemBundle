@@ -2,15 +2,9 @@ kitpages_file_system:
     file_system_list:
         kitpagesFile:
             local:
-                directory_public: %kernel.root_dir%/web
-                directory_private: %kernel.root_dir%
-                base_url: http://localhost/
-services:
-    stepListener:
-        class: Kitpages\ChainBundle\Tests\Sample\StepListener
-        tags:
-            - { name: kernel.event_listener, event: kitpages_chain.on_step_execute, method: onStepExecute }
-            - { name: kernel.event_listener, event: kitpages_chain.after_step_execute, method: afterStepExecute }
+                directory_public: "%kernel.root_dir%/web"
+                directory_private: "%kernel.root_dir%"
+                base_url: http://localhost:8888/
 
 framework:
     secret: "test"

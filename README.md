@@ -141,3 +141,12 @@ if ($adapter->isFile($adapterFile) ) {
     // if file exists in the adapter
 }
 ```
+
+Run the tests
+-------------
+
+```bash
+cd Tests/app/web
+php -S localhost:8888
+
+```
