@@ -13,6 +13,11 @@ Some elements of the configuration system are based on the code of the KnpGaufre
 Versions
 ========
 
+2019-01-23 : v4.0.0
+
+* [new] upgrade to Symfony 2.8, 3.x, 4.x
+* [doc] best doc for tests
+
 2018-05-16 : v3.2.1
 
 * [fix] url of the file in the flysystem system for swift
